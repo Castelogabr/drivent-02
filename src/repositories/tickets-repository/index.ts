@@ -1,4 +1,3 @@
-import { Ticket } from '@prisma/client';
 import { prisma } from '@/config';
 
 async function createTicket(enrollmentId: number, ticketTypeId: number) {
@@ -14,7 +13,24 @@ async function createTicket(enrollmentId: number, ticketTypeId: number) {
   });
 }
 
+async function getAllTypes() {
+  return await prisma.ticketType.findMany();
+}
+
+async function getTicket(enrollmentId: number) {
+  return await prisma.ticket.findFirst({
+    where: {
+      enrollmentId: enrollmentId,
+    },
+    include: {
+      TicketType: true,
+    },
+  });
+}
+
 const ticketsRepositories = {
+  getAllTypes,
+  getTicket,
   createTicket,
 };
 
